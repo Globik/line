@@ -1,0 +1,23 @@
+<h1>{{ title }}</h1>
+<div>
+  <nav>
+    <a
+      routerLink=""
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Line1</a>
+    <a 
+		routerLink="/spiral1" 
+		routerLinkActive="active"
+		>Spiral1</a>
+    <a 
+		routerLink="/line2" 
+		routerLinkActive="active"
+		>Line2</a>
+    <a 
+		routerLink="/spiral2" 
+		routerLinkActive="active"
+		>Spiral2</a>
+  </nav>
+  <router-outlet></router-outlet>
+</div>
