@@ -1,0 +1,12 @@
+<section class="wrapper-flex">
+<div class="item">
+	<canvas #canvasEl width="300" height="300"></canvas><button (click)="drawLine()">draw line</button>
+	</div>
+<div class="item">
+	<header>X, Y coordinates</header>
+	<div class="coords-input">
+		<button (click)="showDynamicComponent()">add</button><br>
+		<ng-template #dynamic></ng-template>
+	</div>
+	</div>
+</section>
