@@ -8,7 +8,7 @@ import { Line1Component } from './line1.component';
 import { Spiral1Component } from './spiral1.component';
 import { Line2Component } from './line2.component';
 import { Spiral2Component } from './spiral2.component';
-
+import { DynamicComponent } from './dynamic.component';
 const appRoutes: Routes = [
   { path: '', component: Line1Component },
   { path: 'spiral1', component: Spiral1Component },
@@ -23,6 +23,7 @@ const appRoutes: Routes = [
     Spiral1Component,
     Line2Component,
     Spiral2Component,
+    DynamicComponent,
   ],
   imports: [
     BrowserModule,
