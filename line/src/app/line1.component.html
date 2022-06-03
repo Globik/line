@@ -1,12 +1,17 @@
 <section class="wrapper-flex">
-<div class="item">
-	<canvas #canvasEl width="300" height="300"></canvas><button (click)="drawLine()">draw line</button>
+<div class="flex-item">
+	<div class="canvas-container"><canvas #canvasEl width="300" height="300"></canvas></div><button (click)="drawLine()">draw line</button>
 	</div>
-<div class="item">
-	<header>X, Y coordinates</header>
+<div class="flex-item">
+	<header><strong>X, Y coordinates</strong></header>
 	<div class="coords-input">
-		<button (click)="showDynamicComponent()">add</button><br>
-		<ng-template #dynamic></ng-template>
-	</div>
-	</div>
+		
+  <div>
+    <label>x (0 < x < 300)</label>&nbsp;&nbsp;<input type="number" name="x"    min="0" max="300" [(ngModel)]="x" #xPoint="ngModel">
+    &nbsp;&nbsp;&nbsp;
+    <label>y (0 < y < 300)</label>&nbsp;&nbsp;<input type="number" name="y"    min="0" max="300" [(ngModel)]="y" #yPoint="ngModel">
+    </div>
+    <div><button (click)="addPoint(xPoint.model, yPoint.model)">add point</button></div>
+  </div>
+</div>
 </section>

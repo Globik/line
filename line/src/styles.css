@@ -12,3 +12,27 @@ body {
 canvas {
   border: 1px solid green;
 }
+.wrapper-flex {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.flex-item {
+  width: 400px;
+  align-self: center;
+}
+input[type="number"],
+button {
+  height: 40px;
+  font-weight: bold;
+  border: 1px solid blue;
+}
+div {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
