@@ -53,9 +53,9 @@
       <code id="codeEntry" contenteditable="true" oninput="give(this);"></code>
     </div>
     <br /><br />
-    <canvas id="cnv" style="border: 1px solid green"></canvas>
+    <canvas id="cnv" style="border: 1px solid green" width="300" height="300"></canvas>
     <br /><br />
-    <button onclick="drawBrokenLine();">Провести линию</button>
+    <button onclick="drawBrokenLine();">Провести линию</button>&nbsp&nbsp<button onclick="setSpiral()">spiral</button>
     <h3>Координаты ломаной линии:</h3>
     <output id="out"></output>
 
@@ -131,6 +131,87 @@
         ctx.strokeStyle = "green";
         ctx.stroke();
       }
+      function drawSpiralPoints(/*ctx, centerx, centery, innerRadius, outerRadius, turns=2, startAngle=0*/){
+    var gap=7.8;
+    var width = cnv.width, height = cnv.height; //размеры канвы
+ var cx = Math.floor(width/2), cy = Math.floor(height/2); //центр канвы
+ ctx.clearRect(0,0, cnv.width,cnv.height);
+ ctx.moveTo (cx, cy);
+ var STEPS_PER_ROTATION = 60; //шагов на круг
+ var increment = 2*Math.PI/STEPS_PER_ROTATION;       
+ var theta = increment;
+ var ROTATIONS = dummyArray.length; //количество вращений
+ while (theta < ROTATIONS/*2*Math.PI*/) {
+  var newX = cx + theta * Math.cos(theta)*gap; 
+  var newY = cy - theta * Math.sin(theta)*gap; 
+  ctx.lineTo (newX, newY);
+  ctx.fillStyle="red";
+  ctx.fillRect(newX, newY, 10, 10);
+  theta += increment*dummyArray.length;
+  //alert(dummyArray.length);
+ }
+ ctx.stroke();
+	  }
+	  
+	  function drawSpiralPointsM(){
+    var gap=7.8;
+    var width = cnv.width, height = cnv.height; //размеры канвы
+ var cx = Math.floor(width/2), cy = Math.floor(height/2); //центр канвы
+ //ctx.clearRect(0,0, cnv.width,cnv.height);
+ ctx.moveTo (cx, cy);
+ var STEPS_PER_ROTATION = 60; //шагов на круг
+ var increment = 2*Math.PI/STEPS_PER_ROTATION;       
+ var theta = increment;
+ var ROTATIONS = dummyArray.length; //количество вращений
+ while (theta < ROTATIONS/*2*Math.PI*/) {
+  var newX = cx - theta * Math.cos(theta)*gap; 
+  var newY = cy + theta * Math.sin(theta)*gap; 
+  ctx.lineTo (newX, newY);
+  ctx.fillStyle="brown";
+  ctx.fillRect(newX, newY,10, 10);
+  theta += increment*dummyArray.length;
+  //alert(dummyArray.length);
+ }
+ ctx.stroke();
+	  }
+	  function setSpiral(){
+	 //drawSpiralPoints(ctx, 150, 150, 30, 100);
+	 drawSpiralPoints();
+	 drawSpiralPointsM();
+ }
+	 //drawSpiralPoints();
+function drawSpiral(ctx, centerx, centery, innerRadius, outerRadius, turns=2, startAngle=0){
+	ctx.save();
+    ctx.translate(centerx, centery);
+    ctx.rotate(startAngle);
+    let r = innerRadius;
+    let turns_ = Math.floor(turns*4)/4;
+    let dr = (outerRadius - innerRadius)/turns_/4;
+    let cx = 0, cy = 0; 
+    let directionx = 0, directiony = -1;
+    
+    ctx.beginPath();
+    let angle=0;
+    for(; angle < turns_*2*Math.PI; angle += Math.PI/2){
+        //draw a quarter arc around the center point (x, cy)
+        ctx.arc( cx, cy, r, angle, angle + Math.PI/2);
+        ctx.fillStyle="red";
+        ctx.fillRect(cx, cy, 10,10);
+        //move the center point and increase the radius so we can draw a bigger arc
+        cx += directionx*dr;
+        cy += directiony*dr;
+        r+= dr;
+        
+        //rotate direction vector by 90 degrees
+        [directionx, directiony] = [ - directiony, directionx ];
+    }
+    //draw the remainder of the last quarter turn
+    //ctx.arc( cx, cy, r, angle, angle + 2*Math.PI*( turns - turns_ ))
+    ctx.fillRect(cx, cy, 4, 4)
+    ctx.stroke();
+    ctx.restore();
+}
+//drawSpiral(ctx, 150, 150, 30, 100);
 
       fileSelect.addEventListener(
         "click",
