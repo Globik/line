@@ -1,12 +1,12 @@
 import {
   Component,
-  ViewContainerRef,
+  //ViewContainerRef,
   ViewChild,
   ElementRef,
   AfterViewInit,
-  ComponentRef,
+  //ComponentRef,
 } from '@angular/core';
-import { FormGroup, FormControl, FormArray, NgModel } from '@angular/forms';
+import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'spiral1-app',

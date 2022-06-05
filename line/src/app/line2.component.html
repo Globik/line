@@ -1,0 +1,18 @@
+<section class="wrapper-flex">
+<div class="flex-item">
+	<div class="canvas-container"><canvas #canvasEl3 width="300" height="300"></canvas></div><button (click)="sendPoints()">send points to server</button>
+	</div>
+<div class="flex-item">
+	<header><strong>X, Y coordinates</strong></header>
+	<div class="coords-input">
+		
+  <div>
+    <label>x (0 < x < 300)</label>&nbsp;&nbsp;<input type="number" name="x"    min="0" max="300" [(ngModel)]="x" #xPoint="ngModel">
+    &nbsp;&nbsp;&nbsp;
+    <label>y (0 < y < 300)</label>&nbsp;&nbsp;<input type="number" name="y"    min="0" max="300" [(ngModel)]="y" #yPoint="ngModel">
+    </div>
+    <div><button (click)="addPoint(xPoint.model, yPoint.model)">add point</button></div>
+  </div>
+  <div *ngIf="done">OK</div>
+</div>
+</section>
