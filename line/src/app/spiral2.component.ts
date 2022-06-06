@@ -3,11 +3,11 @@ import { HttpService } from './http.service';
 
 import {
   Component,
-  //ViewContainerRef,
+  
   ViewChild,
   ElementRef,
   AfterViewInit,
-  //ComponentRef,
+  
 } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
@@ -86,7 +86,7 @@ export class Spiral2Component implements AfterViewInit {
     let cx = Math.floor(width / 2),
       cy = Math.floor(height / 2); //центр канвы
     if (this.ctx) {
-      //this.ctx.clearRect(0, 0, width, height);
+      
       this.ctx.moveTo(cx, cy);
       const STEPS_PER_ROTATION = 60; //шагов на круг
       let increment = (2 * Math.PI) / STEPS_PER_ROTATION;

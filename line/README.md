@@ -1,5 +1,9 @@
 # Line
 
+` npm start `
+
+Перейдите в папку server и ` node index `
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.7.
 
 ## Development server
