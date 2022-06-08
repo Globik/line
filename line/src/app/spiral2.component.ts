@@ -1,14 +1,6 @@
-
 import { HttpService } from './http.service';
 
-import {
-  Component,
-  
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  
-} from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 @Component({
@@ -17,7 +9,7 @@ import { NgModel } from '@angular/forms';
   providers: [HttpService],
 })
 export class Spiral2Component implements AfterViewInit {
-	x: string = '';
+  x: string = '';
   y: string = '';
 
   @ViewChild('canvasEl4', { static: false })
@@ -25,10 +17,10 @@ export class Spiral2Component implements AfterViewInit {
 
   private ctx: CanvasRenderingContext2D | null;
   randomPoints: any = [];
-  
+
   done: boolean = false;
   constructor(private httpService: HttpService) {}
-  
+
   ngAfterViewInit(): void {
     this.ctx = this.canvas.nativeElement.getContext('2d');
     if (this.ctx) {
@@ -57,13 +49,13 @@ export class Spiral2Component implements AfterViewInit {
     });
   }
   sendToServer() {
-	  
-    this.httpService.sendData(this.randomPoints).subscribe(
+    let sorted = this.sortedArray(this.randomPoints);
+    this.httpService.sendData(sorted).subscribe(
       (data: any) => {
         console.log('data: ', data);
-        
+
         this.done = true;
-        this.drawSpiral(true);
+        this.drawSpiralX(data.arr, data.m, data.n);
       },
       (error) => console.error(error)
     );
@@ -78,39 +70,82 @@ export class Spiral2Component implements AfterViewInit {
       this.ctx.stroke();
     }
   }
-  
-  drawSpiral(one: boolean) {
-    let gap = 7.8;
-    let width = this.canvas.nativeElement.width,
-      height = this.canvas.nativeElement.height; //размеры канвы
-    let cx = Math.floor(width / 2),
-      cy = Math.floor(height / 2); //центр канвы
-    if (this.ctx) {
-      
-      this.ctx.moveTo(cx, cy);
-      const STEPS_PER_ROTATION = 60; //шагов на круг
-      let increment = (2 * Math.PI) / STEPS_PER_ROTATION;
-      let theta = increment;
-      let ROTATIONS = this.randomPoints.length; //количество вращений
-      while (theta < ROTATIONS) {
-		  if(!one){
-        var newX = cx + theta * Math.cos(theta) * gap;
-        var newY = cy - theta * Math.sin(theta) * gap;
-	}else{
-		var newX = cx - theta * Math.cos(theta) * gap;
-        var newY = cy + theta * Math.sin(theta) * gap;
-	}
-	this.ctx.save();
-        this.ctx.lineTo(newX, newY);
-        this.ctx.fillStyle = (one ? 'red' : 'green');
-        this.ctx.fillRect(newX, newY, 10, 10);
-        this.ctx.restore();
-        theta += increment * this.randomPoints.length;
+
+  drawSpiral() {
+    let sorti = this.sortedArray(this.randomPoints);
+    let s: number = 1;
+    let n: number = 0;
+    let m: number = 0;
+    let len = Math.round(Math.sqrt(sorti.length));
+
+    let array: any = [];
+    n = len;
+    m = len;
+    for (let i = 0; i < len; i++) {
+      array[i] = [];
+      for (let k = 0; k < len; k++) array[i][k] = [0];
+    }
+
+    for (let y = 0; y < n; y++) {
+      array[0][y] = sorti[y].x;
+
+      s++;
+    }
+    for (let x = 1; x < m; x++) {
+      array[x][n - 1] = sorti[s - 1].x;
+
+      s++;
+    }
+    for (let y = n - 2; y >= 0; y--) {
+      array[m - 1][y] = sorti[s - 1].x;
+      s++;
+    }
+    for (let x = m - 2; x > 0; x--) {
+      array[x][0] = sorti[s - 1].x;
+      s++;
+    }
+
+    for (let x = 0; x < m; x++) {
+      for (let y = 0; y < n; y++) {
+        if (array[x][y] == 0) {
+          array[x][y] = sorti[s - 1].x;
+        }
       }
-      this.ctx.stroke();
+    }
+
+    if (this.ctx) this.ctx.fillStyle = 'brown';
+    for (let x = 0; x < m; x++) {
+      for (let y = 0; y < n; y++) {
+        if (this.ctx) {
+          this.ctx.fillRect(50 * x, 50 * y, 45, 45);
+          this.ctx.save();
+          this.ctx.fillStyle = 'black';
+
+          this.ctx.font = '23px serif';
+          this.ctx.fillText(array[y][x], 2 + 55 * x, 23 + 55 * y);
+          this.ctx.restore();
+        }
+      }
     }
   }
-  
+
+  drawSpiralX(arr: any, m: number, n: number) {
+    if (this.ctx) this.ctx.fillStyle = 'orange';
+    for (let x = 0; x < m; x++) {
+      for (let y = 0; y < n; y++) {
+        if (this.ctx) {
+          this.ctx.fillRect(140 + 50 * x, 150 + 50 * y, 45, 45);
+          this.ctx.save();
+          this.ctx.fillStyle = 'black';
+
+          this.ctx.font = '23px serif';
+
+          this.ctx.fillText(arr[y][x], 145 + 55 * x, 175 + 55 * y);
+          this.ctx.restore();
+        }
+      }
+    }
+  }
   addPoint(x: NgModel, y: NgModel) {
     if (!x || !y) {
       alert('No x or y data provided!');
@@ -124,5 +159,11 @@ export class Spiral2Component implements AfterViewInit {
 
     this.x = '';
     this.y = '';
+  }
+  sortedArray(arr: any) {
+    arr.sort(function (a: any, b: any) {
+      return a.x - b.x;
+    });
+    return arr;
   }
 }

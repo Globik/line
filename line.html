@@ -53,7 +53,7 @@
       <code id="codeEntry" contenteditable="true" oninput="give(this);"></code>
     </div>
     <br /><br />
-    <canvas id="cnv" style="border: 1px solid green" width="300" height="300"></canvas>
+    <canvas id="cnv" style="border: 1px solid green" width="400" height="400"></canvas>
     <br /><br />
     <button onclick="drawBrokenLine();">Провести линию</button>&nbsp&nbsp<button onclick="setSpiral()">spiral</button>
     <h3>Координаты ломаной линии:</h3>
@@ -61,7 +61,7 @@
 
     <script>
       var dummyPoints =
-        '[{"x": 240, "y": 4}, {"x":45, "y": 132}, {"x":35, "y": 94}, {"x": 156, "y": 80}, {"x": 66, "y": 78}, {"x": 134, "y":120}, {"x": 10, "y": 50}, {"x": 67, "y": 120}]';
+        '[{"x": 240, "y": 4}, {"x":45, "y": 132}, {"x":35, "y": 94}, {"x": 156, "y": 80}, {"x": 66, "y": 78}, {"x": 134, "y":120}, {"x": 10, "y": 50}, {"x": 67, "y": 120}, {"x": 87, "y": 54}]';
 
       var dummyArray;
 
@@ -246,6 +246,205 @@ function drawSpiral(ctx, centerx, centery, innerRadius, outerRadius, turns=2, st
         },
         false
       );
+      
+      
+      
+      
+       function main() {
+        //Заполним массив, количество строк мы обозначим m, а столбцов - n.
+        let m = 3;
+        let n = 3;
+ 
+        //С помощью переменной s задаются числа внутри массива начиная с 1.
+        let s = 1;
+ let sorti = sortedArray(dummyArray);
+        
+ var array = [[0,0,0], [0,0,0], [0,0,0]];
+// alert(Math.round(Math.sqrt(8)))
+        //Заполняем периметр массива по часовой стрелке.
+        ctx.fillStyle="brown";
+        for (let y = 0; y < n; y++) {
+            array[0][y] = sorti[y].x;
+            
+           // ctx.fillRect(sorti[y].x, 50,4, 4);
+            s++;
+        }
+        for (let x = 1; x < m; x++) {
+			
+            array[x][n - 1] =  sorti[s-1].x;//(sorti[s] ==  undefined ? s : sorti[s-1].x);//s;
+           // ctx.fillRect(50, sorti[s-1].x,4, 4);
+            s++;
+        }
+        for (let y = n - 2; y >= 0; y--) {
+            array[m - 1][y] = sorti[s-1].x;//s;
+           // ctx.fillRect(sorti[s-1].x,100,4, 4);
+            s++;
+        }
+        for (let x = m - 2; x > 0; x--) {
+            array[x][0] = sorti[s-1].x;//s;
+            s++;
+        }
+        //alert(sorti.length)
+			console.log("arr ", array)
+        //Периметр заполнен. Продолжаем заполнять массив и задаём
+        //координаты ячейки, которую необходимо заполнить следующей.
+        let c = 1;
+        let d = 1;
+ 
+        while (s < m * n) {
+            //В Java инициализированный интовый массив заполняется нулями.
+            //Периметр мы заполнили числами, отличными от нулей.
+            //Следующие циклы поочерёдно работают, заполняя ячейки.
+            //Вложенный цикл останавливается, если следующая ячейка имеет 
+            //значение, отличное от ноля. Ячейка, на которой остановился 
+            //цикл, не заполняется.
+ //alert(1);
+            //Движемся вправо.
+            while (array[c][d + 1] == 0) {
+                array[c][d] = s;
+                s++;
+                d++;
+            }
+ 
+            //Движемся вниз.
+            while (array[c + 1][d] == 0) {
+                array[c][d] = s;
+                s++;
+                c++;
+            }
+ 
+            //Движемся влево.
+            while (array[c][d - 1] == 0) {
+                array[c][d] = s;
+                s++;
+                d--;
+            }
+ 
+            //Движемся вверх.
+            while (array[c - 1][d] == 0) {
+                array[c][d] = s;
+                s++;
+                c--;
+            }
+        }
+ 
+        //При данном решении в центре всегда остаётся незаполненная ячейка.
+        //Убираем её при помощи следующего цикла.
+        for (let x = 0; x < m; x++) {
+            for (let y = 0; y < n; y++) {
+                if (array[x][y] == 0) {
+                    array[x][y] = sorti[s-1].x;//sorti[sorti.length-1].x;
+                }
+            }
+        }
+ 
+        //Выводим массив в консоль.
+        for (let x = 0; x < m; x++) {
+            for (let y = 0; y < n; y++) {
+				ctx.fillRect( 50 * x, 50 * y, 45, 45);
+				ctx.save();
+				ctx.fillStyle="black";
+				ctx.weight="bold";
+				ctx.font = "23px serif";
+				ctx.fillText(array[y][x], 2+55*x, 23+55*y);
+				ctx.restore();
+                if (array[x][y] < 10) {
+					//ctx.fillRect(8 + 45 * x,6 + 45 * y, 4, 4);
+                    //Два пробела, чтобы в консоли столбцы были ровные.
+                    console.log(array[x][y] + ",  ");
+                } else {
+                    console.log(array[x][y] + ", ");
+                }
+            }
+           // console.log("");
+        }
+        console.log(array)
+        for (let i = 0; i < 3; i++) {
+			//ctx.fillRect(80 + 45*i, 30, 40, 40);
+		}
+    }
+    main();
+    
+    var array = [];
+    
+     for(let i=0;i < 3;i++){
+		array[i]=[]
+		for(let k=0;k<3;k++)
+		array[i][k]=[0]
+	 }
+    console.log("AR", array)
+    
+ function main2() {
+        //Заполним массив, количество строк мы обозначим m, а столбцов - n.
+        let m = 3;
+        let n = 3;
+ 
+        //С помощью переменной s задаются числа внутри массива,
+        //начиная с 25 в данном случае.
+        let s = (m * n);
+ 
+        //Объявляем и инициализируем массив.
+       // let array = [[0,0,0], [0,0,0], [0,0,0]];
+     //  let array = new Array(3).fill(new Array(3).fill(0))
+     
+ let sorti = sortedArray(dummyArray);
+ 
+          for (let y = 0; y < n; y++) {
+			  
+            array[0][y] = sorti[s-1].x;
+            s--;
+        }
+        for (let x = 1; x < m; x++) {
+		
+            array[x][n - 1] = sorti[s-1].x;
+            s--;
+        }
+        for (let y = n - 2; y >= 0; y--) {
+            array[m - 1][y] = sorti[s-1].x;
+            s--;
+        }
+        for (let x = m - 2; x > 0; x--) {
+			
+            array[x][0] = sorti[s-1].x;
+            s--;
+        }
+        
+        for (let x = 0; x < m; x++) {
+            for (let y = 0; y < n; y++) {
+                if (array[x][y] == 0) {
+				
+                    array[x][y] = sorti[s-1].x;
+                }
+            }
+        }
+ 
+        console.log("arr2:", array);
+        ctx.fillStyle="orange";
+        for (let x = 0; x < m; x++) {
+            for (let y = 0; y < n; y++) {
+				ctx.fillRect( 200+50 * x, 200+50 * y, 45, 45);
+				ctx.save();
+				ctx.fillStyle="black";
+			
+				ctx.font = "23px serif";
+				ctx.fillText(array[y][x], 200+55*x, 225+55*y);
+				ctx.restore();
+			}}
+	}
+      
+      
+      
+      main2();
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
     </script>
   </body>
 </html>

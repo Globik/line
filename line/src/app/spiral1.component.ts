@@ -48,27 +48,61 @@ export class Spiral1Component implements AfterViewInit {
     });
   }
   drawSpiral() {
-    let gap = 7.8;
-    let width = this.canvas.nativeElement.width,
-      height = this.canvas.nativeElement.height; //размеры канвы
-    let cx = Math.floor(width / 2),
-      cy = Math.floor(height / 2); //центр канвы
-    if (this.ctx) {
-      this.ctx.clearRect(0, 0, width, height);
-      this.ctx.moveTo(cx, cy);
-      const STEPS_PER_ROTATION = 60; //шагов на круг
-      let increment = (2 * Math.PI) / STEPS_PER_ROTATION;
-      let theta = increment;
-      let ROTATIONS = this.randomPoints.length; //количество вращений
-      while (theta < ROTATIONS) {
-        let newX = cx + theta * Math.cos(theta) * gap;
-        let newY = cy - theta * Math.sin(theta) * gap;
-        this.ctx.lineTo(newX, newY);
-        this.ctx.fillStyle = 'red';
-        this.ctx.fillRect(newX, newY, 10, 10);
-        theta += increment * this.randomPoints.length;
+    let sorti = this.sortedArray(this.randomPoints);
+    let s: number = 1;
+    let n: number = 0;
+    let m: number = 0;
+    let len = Math.round(Math.sqrt(sorti.length));
+    
+    let array: any = [];
+    n = len;
+    m = len;
+    for (let i = 0; i < len; i++) {
+      array[i] = [];
+      for (let k = 0; k < len; k++) array[i][k] = [0];
+    }
+    // console.log(array);
+
+    for (let y = 0; y < n; y++) {
+      array[0][y] = sorti[y].x;
+
+      s++;
+    }
+    for (let x = 1; x < m; x++) {
+      array[x][n - 1] = sorti[s - 1].x;
+
+      s++;
+    }
+    for (let y = n - 2; y >= 0; y--) {
+      array[m - 1][y] = sorti[s - 1].x;
+      s++;
+    }
+    for (let x = m - 2; x > 0; x--) {
+      array[x][0] = sorti[s - 1].x;
+      s++;
+    }
+
+    for (let x = 0; x < m; x++) {
+      for (let y = 0; y < n; y++) {
+        if (array[x][y] == 0) {
+          array[x][y] = sorti[s - 1].x;
+        }
       }
-      this.ctx.stroke();
+    }
+
+    if (this.ctx) this.ctx.fillStyle = 'brown';
+    for (let x = 0; x < m; x++) {
+      for (let y = 0; y < n; y++) {
+        if (this.ctx) {
+          this.ctx.fillRect(50 * x, 50 * y, 45, 45);
+          this.ctx.save();
+          this.ctx.fillStyle = 'black';
+
+          this.ctx.font = '23px serif';
+          this.ctx.fillText(array[y][x], 2 + 55 * x, 23 + 55 * y);
+          this.ctx.restore();
+        }
+      }
     }
   }
 
@@ -85,5 +119,11 @@ export class Spiral1Component implements AfterViewInit {
 
     this.x = '';
     this.y = '';
+  }
+  sortedArray(arr: any) {
+    arr.sort(function (a: any, b: any) {
+      return a.x - b.x;
+    });
+    return arr;
   }
 }
